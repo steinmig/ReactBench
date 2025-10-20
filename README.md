@@ -77,7 +77,7 @@ Download the LeftNet checkpoint from [hugging face](https://huggingface.co/yhong
 
 run
 ```bash
-python ReactBench main.py config.yaml
+python ReactBench/main.py config.yaml
 ``` 
 
 calc can be: leftnet, leftnet-d, mace-pretrain, mace-finetuned
