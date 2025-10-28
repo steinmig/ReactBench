@@ -3,6 +3,41 @@ from mace.calculators import mace_off_finetuned, mace_off
 import torch
 
 def get_mace_calculator(device="cpu", ver='finetuned'):
+    import mace
+    import e3nn
+    torch.serialization.add_safe_globals([mace.modules.models.ScaleShiftMACE])
+    torch.serialization.add_safe_globals([mace.modules.blocks.LinearNodeEmbeddingBlock])
+    torch.serialization.add_safe_globals([e3nn.o3._linear.Linear])
+    torch.serialization.add_safe_globals([e3nn.o3._irreps.Irreps])
+    torch.serialization.add_safe_globals([e3nn.o3._irreps._MulIr])
+    torch.serialization.add_safe_globals([e3nn.o3._irreps.Irrep])
+    torch.serialization.add_safe_globals([e3nn.o3._linear.Instruction])
+    torch.serialization.add_safe_globals([mace.modules.blocks.RadialEmbeddingBlock])
+    torch.serialization.add_safe_globals([mace.modules.radial.BesselBasis])
+    torch.serialization.add_safe_globals([mace.modules.radial.PolynomialCutoff])
+    torch.serialization.add_safe_globals([e3nn.o3._spherical_harmonics.SphericalHarmonics])
+    torch.serialization.add_safe_globals([mace.modules.blocks.AtomicEnergiesBlock])
+    torch.serialization.add_safe_globals([torch.nn.modules.container.ModuleList])
+    torch.serialization.add_safe_globals([mace.modules.blocks.RealAgnosticInteractionBlock])
+    torch.serialization.add_safe_globals([e3nn.o3._tensor_product._tensor_product.TensorProduct])
+    torch.serialization.add_safe_globals([e3nn.o3._tensor_product._instruction.Instruction])
+    torch.serialization.add_safe_globals([e3nn.nn._fc.FullyConnectedNet])
+    torch.serialization.add_safe_globals([e3nn.nn._fc._Layer])
+    torch.serialization.add_safe_globals([e3nn.math._normalize_activation.normalize2mom])
+    torch.serialization.add_safe_globals([torch.nn.functional.silu])
+    torch.serialization.add_safe_globals([e3nn.o3._tensor_product._sub.FullyConnectedTensorProduct])
+    torch.serialization.add_safe_globals([mace.modules.irreps_tools.reshape_irreps])
+    torch.serialization.add_safe_globals([mace.modules.blocks.RealAgnosticResidualInteractionBlock])
+    torch.serialization.add_safe_globals([mace.modules.blocks.EquivariantProductBasisBlock])
+    torch.serialization.add_safe_globals([mace.modules.symmetric_contraction.SymmetricContraction])
+    torch.serialization.add_safe_globals([mace.modules.symmetric_contraction.Contraction])
+    torch.serialization.add_safe_globals([torch.fx.graph_module.reduce_graph_module])
+    torch.serialization.add_safe_globals([torch.fx._symbolic_trace.Tracer])
+    torch.serialization.add_safe_globals([torch.nn.modules.container.ParameterList])
+    torch.serialization.add_safe_globals([mace.modules.blocks.LinearReadoutBlock])
+    torch.serialization.add_safe_globals([mace.modules.blocks.NonLinearReadoutBlock])
+    torch.serialization.add_safe_globals([e3nn.nn._activation.Activation])
+    torch.serialization.add_safe_globals([mace.modules.blocks.ScaleShiftBlock])
     # Disable CUDA if using CPU to prevent CUDA initialization errors
     if device == "cpu":
         # Temporarily disable CUDA to prevent initialization errors
@@ -11,9 +46,9 @@ def get_mace_calculator(device="cpu", ver='finetuned'):
     
     try:
         if ver == 'finetuned':
-            return mace_off_finetuned(device=device, model='/root/ReactBench/ckpt/mace.ckpt')
+            return mace_off_finetuned(device=device, model='/root/ReactBench/ckpt/mace.ckpt', weights_only=False)
         elif ver == 'pretrain':
-            return mace_off(model="medium", default_dtypes='float64') 
+            return mace_off(model="medium", default_dtypes='float64', weights_only=False) 
     finally:
         # Restore original CUDA availability check
         if device == "cpu":
