@@ -12,6 +12,10 @@ from .mace import (
     MACEMLFF, get_mace_calculator
 )
 
+from .uma import (
+    UMAMLFF, get_uma_calculator
+)
+
 # Factory functions for calculators
 # LeftNet
 def create_leftnet_calculator(device="cpu"):
@@ -50,6 +54,24 @@ def create_mace_finetuned_mlff(device="cpu"):
     """Create MACE MLFF for pysisyphus"""
     return MACEMLFF(device=device, ver='finetuned')
 
+# UMA-pretrained
+def create_uma_pretrained_calculator(device="cpu"):
+    """Create UMA calculator for run_pygsm.py"""
+    return get_uma_calculator(device=device, ver='pretrain')
+
+def create_uma_pretrained_mlff(device="cpu"):
+    """Create UMA MLFF for pysisyphus"""
+    return UMAMLFF(device=device, ver='pretrain')
+
+# UMA-finetuned
+def create_uma_finetuned_calculator(device="cpu"):
+    """Create UMA calculator for run_pygsm.py"""
+    return get_uma_calculator(device=device, ver='finetuned')
+
+def create_uma_finetuned_mlff(device="cpu"):
+    """Create UMA MLFF for pysisyphus"""
+    return UMAMLFF(device=device, ver='finetuned')
+
 
 # Unified mapping: calculator name -> factory functions
 CALCULATOR_FACTORIES = {
@@ -68,6 +90,14 @@ CALCULATOR_FACTORIES = {
     'mace-finetuned': {
         'calculator': create_mace_finetuned_calculator,
         'mlff': create_mace_finetuned_mlff,
+    },
+    'uma-pretrain': {
+        'calculator': create_uma_pretrained_calculator,
+        'mlff': create_uma_pretrained_mlff,
+    },
+    'uma-finetuned': {
+        'calculator': create_uma_finetuned_calculator,
+        'mlff': create_uma_finetuned_mlff,
     },
 }
 
