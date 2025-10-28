@@ -1,3 +1,4 @@
+import os
 from pysisyphus.constants import AU2EV, BOHR2ANG
 from mace.calculators import mace_off_finetuned, mace_off
 import torch
@@ -43,10 +44,11 @@ def get_mace_calculator(device="cpu", ver='finetuned'):
         # Temporarily disable CUDA to prevent initialization errors
         original_cuda_available = torch.cuda.is_available
         torch.cuda.is_available = lambda: False
-    
+
+    ckpt_path = os.getenv("REACTBENCH_CKPT_PATH", "/root/ReactBench/ckpt/")
     try:
         if ver == 'finetuned':
-            return mace_off_finetuned(device=device, model='/root/ReactBench/ckpt/mace.ckpt', weights_only=False)
+            return mace_off_finetuned(device=device, model=str(os.path.join(ckpt_path, "mace.ckpt")), weights_only=False)
         elif ver == 'pretrain':
             return mace_off(model="medium", default_dtypes='float64', weights_only=False) 
     finally:
